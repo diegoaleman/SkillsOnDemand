@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Skills On Demand</title>
+
+	<!-- CSS  -->
+  	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  	<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  	<link href="css/indexStyles.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+	<nav class="cyan darken-3">
+	    <div class="nav-wrapper container">
+	    	<a href="" class="brand-logo">SkillsOnDemand</a>
+	      	<ul id="nav-mobile" class="right hide-on-med-and-down">
+	        	<li><a href="">Sign in</a></li>
+	        	<li><a href="">Sign up</a></li>
+	   		</ul>
+		</div>
+	</nav>
+
+	<div class="section">
+		<div class="container">
+			<h1 class="header center">Skills on demand</h1>
+			<p>Lorem ipsum</p>
+		</div>
+		<nav class="cyan darken-3 container">
+    		<div class="nav-wrapper">
+     		 	<form>
+        			<div class="input-field">
+          				<input id="search" type="search" required>
+          				<label for="search"><i class="material-icons">search</i></label>
+          				<i class="material-icons">close</i>
+       				</div>
+     		 	</form>
+     		 	<ul class="collection" id="collect">
+      				<li class="collection-item" id="subColl">Alvin</li>
+      				<li class="collection-item" id="subColl">Alvin</li>
+      				<li class="collection-item" id="subColl">Alvin</li>
+      				<li class="collection-item" id="subColl">Alvin</li>
+      				<li class="collection-item" id="subColl">Alvin</li>
+    			</ul>
+    		</div>
+  		</nav>
+	</div>
+
+	<!--Import jQuery before materialize.js-->
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</body>
+<script type="text/javascript">
+	$( document ).on('ready', function() {
+
+		var data = [
+    		{
+        		name: 'Michael',
+        		skill: 'C++'
+    		},
+    		{
+       			name: 'Ben',
+        		skill: 'PHP'
+    		},
+    		{
+        		name: 'Joel',
+        		skill: 'Objective-C'
+    		}
+		];
+
+		var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+    
+    // $('#search').autocomplete({
+    // minLength: 0,
+    // source:availableTags,
+    // appendTo: ".collection",
+    // open: function(event, ui) {
+    //     $(".ui-autocomplete").css("color", "#f8c1c3");
+    // }});
+
+   //  $("#search").on({
+   //  	keyup: function(e){
+   //  		var search = $("#search");
+   //  		for(var i in data){
+   //  			if(data[i].name.match(search)){
+   //      		$('#collect').append($("<li class='collection-item'>" + data[i].skill + "</li>"));
+   //  			}
+			// }
+   //  	}
+   //  });
+
+});
+
+
+	
+</script>
+</html>
