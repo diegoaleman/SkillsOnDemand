@@ -73,22 +73,23 @@
 			var jsonObject = {"email": $("#email").val(),
                                "password": $("#password").val(),
                                "firstName": $("#firstName").val(),
-                               "lastName": $("#lastName").val()};
-			$.ajax({
-              	type: 'POST',
-              	url: 'data/registrationService.php',
-              	data: jsonObject,
-              	dataType:'json',
-              	headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-              	success: function(jsonData){
-                	alert(jsonData);
-
-              	},
-              	error: function(errorMessage){
-                	alert(errorMessage.statusText);
-              	}
-              	
-           	});
+                               "lastName": $("#lastName").val(),
+                           	   "action": "REGISTER"};
+				$.ajax({
+                    type: "POST",
+                    url: "data/applicationLayer.php",
+                    dataType: "json",
+                    data: jsonObject,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    success: function(jsonData) {
+                        //window.location.replace("login.html");
+                        alert(jsonData);
+                       
+                    },
+                    error: function(errorMsg){
+                        alert(errorMsg.statusText);
+                    }
+                });
 		});
 
 
