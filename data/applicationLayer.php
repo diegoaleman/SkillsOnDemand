@@ -11,6 +11,8 @@
 						break;
 		case 'REGISTER': registerAction();
 						break;
+		case 'EMAIL': sendEmail();
+						break;
 	}
 
 	function loginAction()
@@ -119,6 +121,56 @@
 		else
 		{
 			die(json_encode($result));
+		}
+	}
+
+	function sendEmail()
+	{
+		$email = $_POST['email'];
+		$message = $_POST['message'];
+		$first = $_POST['firstName'];
+		$last = $_POST['lastName'];
+
+		date_default_timezone_set('Etc/UTC');
+		require 'PHPMailerAutoload.php';
+		
+		$mail = new PHPMailer;
+		
+		$mail->isSMTP();
+		//Enable SMTP debugging
+		// 0 = off (for production use)
+		// 1 = client messages
+		// 2 = client and server messages
+		$mail->SMTPDebug = 2;
+		//Ask for HTML-friendly debug output
+		$mail->Debugoutput = 'html';
+		//Set the hostname of the mail server
+		$mail->Host = 'smtp.gmail.com';
+		
+		//Set the SMTP port number - 587 for authenticated TLS, a.k.a. RFC4409 SMTP submission
+		$mail->Port = 587;
+		//Set the encryption system to use - ssl (deprecated) or tls
+		$mail->SMTPSecure = 'tls';
+		//Whether to use SMTP authentication
+		$mail->SMTPAuth = true;
+		//Username to use for SMTP authentication - use full email address for gmail
+		$mail->Username = "jorgephpmailertest@gmail.com";
+		//Password to use for SMTP authentication
+		$mail->Password = "testphp2015";
+		
+		$mail->setFrom($email, $first);
+		
+		$mail->addAddress('jorgelp94@gmail.com', 'Skills On Demand');
+		
+		$mail->Subject = 'Skills On Demand Contact: ';
+		
+		$mail->Body = 'Name: ' . $first . ' ' . $last . '<br />' . 'Email: ' . $email . '<br />' . 'Message: ' . $message;
+		$mail->AltBody = '$message';
+		
+		if (!$mail->send()) {
+    		echo json_encode("Mailer Error: " . $mail->ErrorInfo);
+		} else {
+    		echo json_encode("Message sent!");
 		}
 	}
 

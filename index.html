@@ -161,7 +161,7 @@
 			        </div>
 			        <div class="row">
 			        	<div class="input-field col s12">
-			        		<textarea placeholder="Message" id="textarea1" class="materialize-textarea"></textarea>
+			        		<textarea placeholder="Message" id="message" class="materialize-textarea"></textarea>
 			        	</div>
 			        </div>
 			      	
@@ -211,4 +211,33 @@
 	<script type="text/javascript" src="js/materialize.min.js"></script>
 	<script type="text/javascript" src="js/landingPage.js"></script>
 </body>
+<script type="text/javascript">
+        $( document ).on('ready', function() {
+           $("#sendButton").on("click", function(){
+              var jsonObject = {"email": $("#email").val(),
+                                "message": $("#message").val(),
+                            	"firstName": $("#firstName").val(),
+                            	"lastName": $("#lastName").val(),
+                            	"action": "EMAIL"};
+
+              $.ajax({
+                type: 'POST',
+                url: 'data/applicationLayer.php',
+                data: jsonObject,
+                dataType:'json',
+                headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+                success: function(jsonData){
+                  alert(jsonData.statusText);
+
+                },
+                error: function(errorMessage){
+                  alert(errorMessage.statusText);
+                  alert("not working")
+                }
+
+              });
+              
+            });
+        });
+    </script>
 </html>
