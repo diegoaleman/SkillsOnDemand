@@ -13,6 +13,10 @@
 						break;
 		case 'EMAIL': sendEmail();
 						break;
+		case 'COOKIE': verifyCookies();
+						break;
+		case 'NEWPOST': createNewPost();
+						break;
 	}
 
 	function loginAction()
@@ -55,11 +59,11 @@
 		   {	
 		    	$response = array('fName' => $result['fName'], 'lName' => $result['lName']);   
 			    
-			 //    # Starting the sesion (At the server)
-		  //   	startSession($result['fName'], $result['lName'], $result['email']);
+			    # Starting the sesion (At the server)
+		    	startSession($result['fName'], $result['lName'], $result['email']);
 
-			 //    # Setting the cookies
-				// setcookie("cookieUsername", $result['email']);
+			    # Setting the cookies
+				setcookie("cookieUsername", $result['email']);
 			    
 			    echo json_encode($response);
 			}
@@ -171,6 +175,37 @@
     		echo json_encode("Mailer Error: " . $mail->ErrorInfo);
 		} else {
     		echo json_encode("Message sent!");
+		}
+	}
+
+	function verifyCookies()
+	{
+		if (isset($_COOKIE['cookieUsername']))
+		{
+			echo json_encode(array('cookieUsername' => $_COOKIE['cookieUsername']));   	    
+		}
+		else
+		{
+		    die(json_encode(errors(417)));
+		}
+	}
+
+	function createNewPost()
+	{
+		// TO DO: make sure session is active
+		$firstName = $_SESSION['firstName'];
+		$lastName = $_SESSION['lastName'];
+		$email = $_SESSION['email'];
+		$title = $_POST['title'];
+		$description = $_POST['description'];
+
+		$result = newPost($title, $description, $firstName, $lastName, $email);
+
+		if ($result['message'] == 'OK') {
+			echo json_encode("Post successfull");
+		}
+		else {
+			die(json_encode($result));
 		}
 	}
 

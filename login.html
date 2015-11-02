@@ -54,6 +54,21 @@
 </body>
 <script type="text/javascript">
 	$( document ).on('ready', function() {
+
+		 $.ajax({
+                type: "POST",
+                url: "data/applicationLayer.php",
+                dataType: "json",
+                data: {'action':'COOKIE'},
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                success: function(jsonData) {
+                    $("#email").val(jsonData.cookieUsername);
+                },
+                error: function(errorMsg){
+                    alert(errorMsg.statusText);
+                }
+            });
+
 		$("#loginButton").on("click", function(){
 			var jsonObject = {"email": $("#email").val(),
                                "password": $("#password").val(),

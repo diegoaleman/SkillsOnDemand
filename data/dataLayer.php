@@ -112,4 +112,56 @@
     	}
     }
 
+    function newPost($title, $description, $firstname, $lastname, $email)
+    {
+    	$conn = connect();
+
+    	if ($conn != null)
+    	{
+    		$sql = "SELECT email FROM Post WHERE email = '$email'";
+    		$result = $conn->query($sql);
+
+    		if ($result->num_rows > 0)
+    		{
+    			$conn->close();
+    			return errors(409);
+    		}
+    		else
+    		{
+    			$sql = "INSERT INTO Post (title, description, fName, lName, email) VALUES ('$title', '$description', '$firstName', '$lastName', '$email'";
+
+    			if (mysqli_query($conn, $sql)) 
+    			{
+    				$response = array('message' => 'OK');
+    			}
+
+    			$conn->close();
+    			return $response;
+    		}
+    	}
+    	else
+    	{
+    		$conn->close();
+    		return errors(500);
+    	}
+    }
+
+    function startSession($fName, $lName, $email)
+    {
+		// Starting the session
+	    session_start();
+	    if (! isset($_SESSION['firstName']))
+	    {
+	    	$_SESSION['firstName'] = $fName;
+	    }
+	    if (! isset($_SESSION['lastName']))
+	    {
+	    	$_SESSION['lastName'] = $lName;
+	    }
+	    if (! isset($_SESSION['email']))
+	    {
+	    	$_SESSION['email'] = $email;
+	    }
+    }
+
 ?>
