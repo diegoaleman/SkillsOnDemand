@@ -13,7 +13,7 @@ VALUES  ('Jorge', 'Perales', 'jorgelp94', 'test'),
 CREATE TABLE Cart(
 	orderId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	email VARCHAR(250) NOT NULL,
-	skill VARCHAR(30) NOT NULL,
+	skill INT NOT NULL,
 	quantity INT NOT NULL,
 	status CHAR(1) NOT NULL,
 	FOREIGN KEY (email) 
