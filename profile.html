@@ -13,23 +13,72 @@
 
 	<!-- Dropdown Structure -->
 	<ul id="dropdown1" class="dropdown-content">
-	  <li><a href="#!">Cart</a></li>
-	  <li class="divider"></li>
-	  <li><a href="#!">Account</a></li>
-	  <li class="divider"></li>
-	  <li><a href="#!">Settings</a></li>
+	  <li><a href="#!">Logout</a></li>
 	</ul>
 	<nav>
 	  <div class="nav-wrapper container">
 	    <a href="#!" class="brand-logo">SkillsOnDemand</a>
 	    <ul class="right hide-on-med-and-down">
-	      <li><a href="sass.html">Sass</a></li>
-	      <li><a href="badges.html">Components</a></li>
+	      <li><a href="index.html">Main</a></li>
+	      <li><a href="index.html">Components</a></li>
 	      <!-- Dropdown Trigger -->
-	      <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Jorge<i class="material-icons right">arrow_drop_down</i></a></li>
+	      <li id="accountName"><a class="dropdown-button" href="#!" data-activates="dropdown1"><i class="material-icons right">arrow_drop_down</i></a></li>
 	    </ul>
 	  </div>
 	</nav>
+	<br />
+	<br />
+
+	<div class="row container">
+    <div class="col s12">
+      <ul id="tabs" class="tabs z-depth-1">
+        <li id="tab1" class="tab col s3"><a class="active" href="#test1">Cart</a></li>
+        <li id="tab2" class="tab col s3"><a href="#test2">Past Orders</a></li>
+        <li id="tab3" class="tab col s3"><a href="#test3">Posts</a></li> 
+        <li id="tab4" class="tab col s3"><a href="#test4">Messages</a></li>
+        <li id="tab5" class="tab col s3"><a href="#test5">Account</a></li>
+      </ul>
+    </div>
+    <div id="test1" class="col s12">
+    	<div id="content-tab1">
+                <div id="forSaleContent">
+                    <table class="highlight centered" id="cartTable">
+                        <tr>
+                            <th>ID</th>
+                            <th>Skill</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </table>
+                    <a class="waves-effect waves-light btn">Stuff</a>	
+                </div>
+        </div>
+    </div>
+    <div id="test2" class="col s12">
+    	<div id="content-tab2">
+                <div id="forSaleContent">
+                    <table class="highlight centered" id="itemTable">
+                        <tr>
+                            <th>ID</th>
+                            <th>Skill</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </table>
+                    <a class="waves-effect waves-light btn">Stuff</a>	
+                </div>
+        </div>
+    </div>
+    <div id="test3" class="col s12">
+    	Test 3
+    </div>
+    <div id="test4" class="col s12">
+    	Test 4
+    </div>
+     <div id="test5" class="col s12">
+    	Test 5
+    </div>
+  	</div>
 
 	<!--Import jQuery before materialize.js-->
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
@@ -39,19 +88,22 @@
 <script type="text/javascript">
 	$( document ).on('ready', function() {
 
-		//  $.ajax({
-  //               type: "POST",
-  //               url: "data/applicationLayer.php",
-  //               dataType: "json",
-  //               data: {'action':'COOKIE'},
-  //               headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-  //               success: function(jsonData) {
-  //                   $("#email").val(jsonData.cookieUsername);
-  //               },
-  //               error: function(errorMsg){
-  //                   alert(errorMsg.statusText);
-  //               }
-  //           });
+		 $.ajax({
+                type: "POST",
+                url: "data/applicationLayer.php",
+                dataType: "json",
+                data: {'action':'NAME'},
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                success: function(jsonData) {
+                    $("#accountName").html(jsonData);
+                    $("#tab1").trigger("click");
+                },
+                error: function(errorMsg){
+                    alert(errorMsg.statusText);
+                }
+            });
+
+
 
 		// $("#loginButton").on("click", function(){
 		// 	var jsonObject = {"email": $("#email").val(),
@@ -79,6 +131,85 @@
 		// $("#registerButton").on("click", function(){
 		// 	 window.location.replace("registration.html");
 		// });
+	
+	$("#tab1").on("click", function(){
+		//alert("tab 1");
+				$.ajax({
+                    type: "POST",
+                    url: "data/applicationLayer.php",
+                    dataType: "json",
+                    data: {'action':'CART', 'status':'P'},
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    success: function(jsonData) {
+                        var tableRows = "";
+                        $("#cartTable").find("td").remove();
+                        if (jsonData.message == 'OK')
+                        {
+                            //alert("datos");
+                            for(i = 0; i < jsonData.data.length; i ++)
+                            {
+                                tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].orderId + '</td><td>' + jsonData.secondData[i].sTitle + '</td><td>' + jsonData.thirdData[i].name + ' ' + jsonData.thirdData[i].last + '</td><td>' + jsonData.secondData[i].sEmail + '</td></tr>';
+                            } 
+
+                            $("#cartTable").append(tableRows);
+                        }
+                        else
+                        {
+                            //alert("nope");
+                             // $("#purchase").hide();
+                             // $("#cancelPurchase").hide();
+                             alert("Cart empty.");
+                        }
+                    },
+                    error: function(errorMsg){
+                        alert(errorMsg.statusText);
+                    }
+                });
+	});
+	$("#tab2").on("click", function(){
+		//alert("tab 1");
+				$.ajax({
+                    type: "POST",
+                    url: "data/applicationLayer.php",
+                    dataType: "json",
+                    data: {'action':'CART', 'status':'B'},
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    success: function(jsonData) {
+                        var tableRows = "";
+                        $("#itemTable").find("td").remove();
+                        if (jsonData.message == 'OK')
+                        {
+                            //alert("datos");
+                            for(i = 0; i < jsonData.data.length; i ++)
+                            {
+                                tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].orderId + '</td><td>' + jsonData.secondData[i].sTitle + '</td><td>' + jsonData.thirdData[i].name + ' ' + jsonData.thirdData[i].last + '</td><td>' + jsonData.secondData[i].sEmail + '</td></tr>';
+                            } 
+
+                            $("#itemTable").append(tableRows);
+                        }
+                        else
+                        {
+                            //alert("nope");
+                             // $("#purchase").hide();
+                             // $("#cancelPurchase").hide();
+                             alert("Cart empty.");
+                        }
+                    },
+                    error: function(errorMsg){
+                        alert(errorMsg.statusText);
+                    }
+                });
+	});
+	$("#tab3").on("click", function(){
+		alert("tab 3");
+	});
+	$("#tab4").on("click", function(){
+		alert("tab 4");
+	});
+	$("#tab5").on("click", function(){
+		alert("tab 5");
+	});
+
 	});
 </script
 </html>

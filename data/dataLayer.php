@@ -164,4 +164,91 @@
 	    }
     }
 
+    function getSession()
+    {
+    	session_start();
+    	if (isset($_SESSION['firstName'])) {
+    		$response = array('message' => 'OK' ,'name' => $_SESSION['firstName']);
+    		return $response;
+    	} else {
+    		$response = array('name' => 'user');
+    		return $response;
+    	}
+    }
+
+    function getCartItems($email, $status)
+    {
+    	$conn = connect();
+
+        if ($conn != null)
+        {
+
+        	if ($status == 'P') {
+        		// Get cart elements 
+        		$sql = "SELECT * FROM Cart WHERE email = '$email' AND status = 'P'";
+        	} elseif ($status == 'B') {
+        		// Get cart elements 
+        		$sql = "SELECT * FROM Cart WHERE email = '$email' AND status = 'B'";
+        	}
+
+        	$result = $conn->query($sql);
+
+        	if ($result->num_rows > 0)
+			{
+
+				$response;
+				$data = array();
+				while($row = $result->fetch_assoc()) 
+		    	{
+		    		// Get email and skill to display on table
+		    		$rowContent = $row['skill'];
+
+		    		$sql2 = "SELECT * FROM Skill WHERE skillId = '$rowContent'";
+
+		    		$result2 = $conn->query($sql2);
+
+		    		if ($result2->num_rows > 0) {
+		    			$secondData = array(); 
+
+		    			while ($row2 = $result2->fetch_assoc()) {
+
+		    				$rowEmail = $row2['email'];
+
+		    				// Get client info based on email o display name on cart
+		    				$sql3 = "SELECT * FROM Client WHERE email = '$rowEmail'";
+
+		    				$result3 = $conn->query($sql3);
+
+		    				if ($result3->num_rows > 0) {
+		    					$thirdData = array();
+
+		    					while ($row3 = $result3->fetch_assoc()) {
+		    						array_push($thirdData, array('name' => $row3['fName'], 'last' => $row3['lName']));
+		    					}
+		    				}
+
+		    				array_push($secondData, array('sEmail' => $row2['email'], 'sTitle' => $row2['title']));
+		    			}
+		    		}
+
+		    		array_push($data, array('orderId' => $row['orderId'], 'quantity' => $row['quantity']));
+		    	}
+
+		    	$response = array('message' => 'OK', 'data' => $data, 'secondData' => $secondData, 'thirdData' => $thirdData);
+		    	$conn->close();
+		    	return $response;
+			}
+			else
+			{
+				return array('message' => 'NONE');   
+			}
+
+        }
+        else
+        {
+        	$conn->close();
+        	return errors(500);
+        }
+    }
+
 ?>

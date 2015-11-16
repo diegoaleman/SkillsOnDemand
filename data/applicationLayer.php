@@ -17,6 +17,10 @@
 						break;
 		case 'NEWPOST': createNewPost();
 						break;
+		case 'NAME':	sessionName();
+						break;
+		case 'CART':	loadCart();
+						break;
 	}
 
 	function loginAction()
@@ -206,6 +210,46 @@
 		}
 		else {
 			die(json_encode($result));
+		}
+	}
+
+	function sessionName()
+	{
+		$result = getSession();
+		if ($result['message'] == 'OK') {
+			$firstName = $result['name'];
+			echo json_encode($firstName);
+		} else {
+			echo json_encode("ERROR no hay sesion");
+		}
+	}
+
+	function loadCart()
+	{
+		session_start();
+		if (isset($_SESSION['email']))
+		{
+			$result = getCartItems($_SESSION['email'], $_POST['status']);
+
+			if ($result['message'] == 'OK')
+			{
+				echo json_encode($result);
+			}
+			else
+			{
+				if ($result['message'] == 'NONE')
+				{
+					echo json_encode($result);
+				}
+				else
+				{
+					die(json_encode($result));
+				}
+			}
+		}
+		else
+		{
+			die(json_encode(errors(417)));
 		}
 	}
 
