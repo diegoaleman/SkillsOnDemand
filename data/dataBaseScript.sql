@@ -46,6 +46,7 @@ CREATE TABLE Message(
 	sentFrom VARCHAR(50) NOT NULL,
 	messageDate datetime NOT NULL,
 	message VARCHAR(250) NOT NULL,
+	status VARCHAR(1) NOT NULL,
 	FOREIGN KEY (sentTo)
 		REFERENCES Client (email)
 		ON DELETE CASCADE,

@@ -266,6 +266,10 @@
 
 			if ($result['message'] == 'OK')
 			{
+
+				if ($result['emails'] == 'OK') {
+					$message = "An email was sent to each client.";
+				}
 				$message = "Successful sale.";
 
 				// send message to 
