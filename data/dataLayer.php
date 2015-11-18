@@ -198,11 +198,12 @@
 
 				$response;
 				$data = array();
+				$num = 0;
 				while($row = $result->fetch_assoc()) 
 		    	{
 		    		// Get email and skill to display on table
 		    		$rowContent = $row['skill'];
-
+		    		//echo $rowContent;
 		    		$sql2 = "SELECT * FROM Skill WHERE skillId = '$rowContent'";
 
 		    		$result2 = $conn->query($sql2);
@@ -213,6 +214,7 @@
 		    			while ($row2 = $result2->fetch_assoc()) {
 
 		    				$rowEmail = $row2['email'];
+		    				//echo $rowEmail;
 
 		    				// Get client info based on email o display name on cart
 		    				$sql3 = "SELECT * FROM Client WHERE email = '$rowEmail'";
@@ -223,8 +225,13 @@
 		    					$thirdData = array();
 
 		    					while ($row3 = $result3->fetch_assoc()) {
+		    			// 			echo "Pasa" . $num;
+		    			// $num = $num + 1;
+		    						//echo "push a " . $row3['fName'];
 		    						array_push($thirdData, array('name' => $row3['fName'], 'last' => $row3['lName']));
+		    						//echo $thirdData;
 		    					}
+		    					
 		    				}
 
 		    				array_push($secondData, array('sEmail' => $row2['email'], 'sTitle' => $row2['title']));
@@ -249,6 +256,35 @@
         	$conn->close();
         	return errors(500);
         }
+    }
+
+    function hirePeople($email)
+    {
+    	$conn = connect();
+
+    	if($conn != null)
+    	{
+    		
+
+    			$sql2 = "UPDATE Cart SET status = 'B' WHERE email = '$email' AND status = 'P'";
+    			if (mysqli_query($conn, $sql2)) {
+    				// $newquantity = $counter+1;
+
+    				//$response = array("message" =>"OK", "number" => $newquantity);
+    				$response = array("message" => "OK");
+    			} else {
+    				return errors(409);
+    			}
+    			//$counter++;
+    		//}
+
+    		return $response;
+    	}
+    	else 
+    	{
+    		$conn->close();
+    		return errors(409);
+    	}
     }
 
 ?>

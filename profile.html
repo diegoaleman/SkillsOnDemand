@@ -50,7 +50,7 @@
                             <th>Email</th>
                         </tr>
                     </table>
-                    <a class="waves-effect waves-light btn">Stuff</a>	
+                    <a id="hire" class="waves-effect waves-light btn">Hire</a>	
                 </div>
         </div>
     </div>
@@ -64,8 +64,7 @@
                             <th>Name</th>
                             <th>Email</th>
                         </tr>
-                    </table>
-                    <a class="waves-effect waves-light btn">Stuff</a>	
+                    </table>	
                 </div>
         </div>
     </div>
@@ -208,6 +207,23 @@
 	});
 	$("#tab5").on("click", function(){
 		alert("tab 5");
+	});
+
+	$("#hire").on("click", function(){
+				$.ajax({
+                    type: "POST",
+                    url: "data/applicationLayer.php",
+                    dataType: "json",
+                    data: {'action': 'BUY'},
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    success: function(jsonData) {
+                        alert(jsonData);
+                        $("#tab2").trigger("click");
+                    },
+                    error: function(errorMsg){
+                        alert(errorMsg.statusText);
+                    }
+                });
 	});
 
 	});
