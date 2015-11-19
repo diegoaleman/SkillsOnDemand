@@ -21,6 +21,11 @@
 						break;
 		case 'CART':	loadCart();
 						break;
+		case 'POST_SKILL':	postSkill();
+							break;
+		case 'GET_SKILLS': getSkills();
+							break;
+
 	}
 
 	function loginAction()
@@ -251,6 +256,29 @@
 		{
 			die(json_encode(errors(417)));
 		}
+	}
+
+
+
+	function postSkill(){
+		session_start();
+
+		$result = addSkill($_POST['data'], $_SESSION['email']);
+
+
+		if ($result['status'] == 'COMPLETE'){
+			echo json_encode("We succesfully added your skill to our DB");
+		}
+		else{
+			die(json_encode($result));
+		}
+		
+
+	}
+
+	function getSkills(){
+		$result = getAllSkills();
+		echo json_encode($result);
 	}
 
 ?>

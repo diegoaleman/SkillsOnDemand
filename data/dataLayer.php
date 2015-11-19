@@ -251,4 +251,61 @@
         }
     }
 
+
+    function addSkill ($data, $email){
+    	$conn = connect();
+
+    	if ($conn != null){
+
+    		
+    			$title = $data['title'];
+    			$quantity = $data['quantity'];
+    			$description = $data['description'];
+    			$category = $data['category'];
+    			$sql = "INSERT INTO Skill(title, description, email, category, quantity) VALUES ('$title','$description','$email', '$category', '$quantity')";
+    			if (mysqli_query($conn, $sql)) {
+		    		$conn->close();
+				    return array("status" => "COMPLETE");
+				} 
+				else {
+					$conn->close();
+					return errors(409);
+				}
+			
+			
+        }
+        else {
+        	$conn->close();
+        	return errors(500);
+        }
+    }
+
+
+    function getAllSkills(){
+    	$conn = connect();
+
+        if ($conn != null) {
+        	$sql = "SELECT * FROM Skill";
+			$result = $conn->query($sql);
+			
+			# Items exist
+			$response = array();
+			if ($result->num_rows > 0) {
+				while($row = $result->fetch_assoc()) {
+					array_push($response,array('skillId' => $row['skillId'], 'title' => $row['title'], 'description' => $row['description'],'email' => $row['email'],'category' => $row['category'], 'quantity' => $row['quantity']));
+				}
+				return $response;
+			}
+			else {
+				$conn->close();
+				return $response; // no existen items
+			}
+        }
+        else {
+        	# Connection to Database was not successful
+        	$conn->close();
+        	return errors(500);
+        }
+    }
+
 ?>
