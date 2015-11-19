@@ -198,21 +198,25 @@
 
 				$response;
 				$data = array();
+				$secondData = array();
+				$thirdData = array(); 
+				
 				while($row = $result->fetch_assoc()) 
 		    	{
 		    		// Get email and skill to display on table
 		    		$rowContent = $row['skill'];
-
+		    		//echo $rowContent;
 		    		$sql2 = "SELECT * FROM Skill WHERE skillId = '$rowContent'";
 
 		    		$result2 = $conn->query($sql2);
 
 		    		if ($result2->num_rows > 0) {
-		    			$secondData = array(); 
+		    			
 
 		    			while ($row2 = $result2->fetch_assoc()) {
 
 		    				$rowEmail = $row2['email'];
+		    				//echo $rowEmail;
 
 		    				// Get client info based on email o display name on cart
 		    				$sql3 = "SELECT * FROM Client WHERE email = '$rowEmail'";
@@ -220,11 +224,16 @@
 		    				$result3 = $conn->query($sql3);
 
 		    				if ($result3->num_rows > 0) {
-		    					$thirdData = array();
+		    					
 
 		    					while ($row3 = $result3->fetch_assoc()) {
+		    			// 			echo "Pasa" . $num;
+		    			// $num = $num + 1;
+		    			// 			echo "push a " . $row3['fName'];
 		    						array_push($thirdData, array('name' => $row3['fName'], 'last' => $row3['lName']));
+		    						//echo $thirdData;
 		    					}
+		    					
 		    				}
 
 		    				array_push($secondData, array('sEmail' => $row2['email'], 'sTitle' => $row2['title']));
@@ -306,6 +315,64 @@
         	$conn->close();
         	return errors(500);
         }
+    }
+
+
+
+    function hirePeople($email)
+    {
+    	$conn = connect();
+
+    	if($conn != null)
+    	{
+    			$result = getCartItems($email, 'P');
+    			if ($result['message'] == 'OK') {
+    				//echo var_dump($result);
+    				//echo $result['secondData'][0]['sEmail'];
+    				//echo count($result['secondData']);
+    			}
+
+    			$sql = "UPDATE Cart SET status = 'B' WHERE email = '$email' AND status = 'P'";
+    			if (mysqli_query($conn, $sql)) {
+    				// $newquantity = $counter+1;
+
+    				//$response = array("message" =>"OK", "number" => $newquantity);
+
+    				$amount = count($result['secondData']);
+    				$counter = 0;
+
+    				while ($counter < $amount) {
+    						    		// $sql = "INSERT INTO Client (fName, lName, email, passwrd) VALUES ('$firstName', '$lastName', '$email', '$password')";
+    					$emailToSend = $result['secondData'][$counter]['sEmail'];
+    					$personName = $result['thirdData'][$counter]['name'];
+    					//echo $emailToSend;
+    					$dateNow = date("Y/m/d");
+    					//echo $dateNow;
+    					$sql2 = "INSERT INTO Message (sentTo, sentFrom, messageDate, message, status) VALUES ('$emailToSend', '$email', '$dateNow', '$personName wants to hire you!', 'N')";
+
+
+    					if (mysqli_query($conn, $sql2)) {
+    						$response = array("message" => "OK", "emails" => "OK");
+    					} else {
+    						$response = array("message" => "OK", "emails" => "OK");
+    					}
+    					$counter = $counter + 1;
+    				}
+
+    				
+    			} else {
+    				return errors(409);
+    			}
+    			//$counter++;
+    		//}
+
+    		return $response;
+    	}
+    	else 
+    	{
+    		$conn->close();
+    		return errors(409);
+    	}
     }
 
 ?>

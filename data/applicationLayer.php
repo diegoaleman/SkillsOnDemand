@@ -11,9 +11,9 @@
 						break;
 		case 'REGISTER': registerAction();
 						break;
-		case 'EMAIL': sendEmail();
+		case 'EMAIL': 	sendEmail();
 						break;
-		case 'COOKIE': verifyCookies();
+		case 'COOKIE': 	verifyCookies();
 						break;
 		case 'NEWPOST': createNewPost();
 						break;
@@ -25,6 +25,8 @@
 							break;
 		case 'GET_SKILLS': getSkills();
 							break;
+		case 'BUY':		buy();
+						break;
 
 	}
 
@@ -260,6 +262,7 @@
 
 
 
+
 	function postSkill(){
 		session_start();
 
@@ -279,6 +282,46 @@
 	function getSkills(){
 		$result = getAllSkills();
 		echo json_encode($result);
+	}
+
+	function buy()
+	{
+		//$data = $_POST['data'];
+
+		session_start();
+		if (isset($_SESSION['email'])) {
+			
+			$result = hirePeople($_SESSION['email']);
+
+			if ($result['message'] == 'OK')
+			{
+
+				if ($result['emails'] == 'OK') {
+					$message = "An email was sent to each client.";
+				}
+				$message = "Successful sale.";
+
+				// send message to 
+				echo json_encode($message);
+			}
+			else
+			{
+				if ($result['message'] == 'NONE')
+				{
+					echo json_encode($result);
+				}
+				else
+				{
+					die(json_encode($result));
+				}
+			}
+
+		}
+		else
+		{
+			die(json_encode(errors(417)));
+		}
+
 	}
 
 ?>
