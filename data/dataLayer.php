@@ -783,4 +783,63 @@
     	}
     }
 
+
+    function getAllSkillUserData($id){
+        $conn = connect();
+
+        if ($conn != null) {
+            $sql = "SELECT email FROM Skill WHERE skillId = '$id'";
+
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $email = $row['email'];
+                }
+
+                $sql = "SELECT * FROM Client WHERE email = '$email'";
+                $result = $conn->query($sql);
+
+                    $data = array();
+                    $response = array();
+
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            array_push($data,array("year" => $row['yearBdate'], "country" => $row['country'], "city" => $row['city'],"website" => $row['website'], "phone" => $row['phone'], "university" => $row['university'], "interests" => $row['interests'], "more" => $row['more'] ));
+                          
+                        }
+
+                        $response =$data;
+
+                        return $response;
+                    }
+                    else {
+                        $conn->close();
+                        return $response; // no existen items
+                    }
+            }
+
+            else {
+                $conn->close();
+                return $response; // no existen items
+            }
+
+        }
+        else 
+        {
+            $conn->close();
+            return errors(409);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 ?>

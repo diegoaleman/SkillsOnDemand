@@ -43,6 +43,8 @@
 						break;
 		case 'MSG_ID':	showSpecificMessage();
 						break;
+		case 'GET_SKILL_USER_DATA': getSkillUserData();
+									break;
 
 
 	}
@@ -492,6 +494,15 @@
 		{
 			die(json_encode(errors(417)));
 		}
+	}
+
+	function getSkillUserData(){
+		session_start();
+
+		$result = getAllSkillUserData($_POST['id']);
+
+		echo json_encode($result);
+
 	}
 
 ?>

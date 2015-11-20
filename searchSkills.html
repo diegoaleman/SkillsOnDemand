@@ -95,6 +95,8 @@
     </div>
     
 
+
+
   
   <div class="container">
     <div class="row">
@@ -102,13 +104,32 @@
         <h1>Skills</h1>
       </div>
     </div>
-    <div class="divider"></div>
-    <br/>
-    <div id="skills" class="row">
 
-    </div>
+    <div class="divider"></div><br/>
+
+    <div class="row">
+      <div class="col s12">
+        <ul class="tabs">
+          <li id='tab1' class="tab col s6"><a class="active" href="#test1">Search</a></li>
+          <li id='tab2' class="tab col s6"><a href="#test2">Details</a></li>
+        </ul>
+      </div>
+      <div id="test1" class="col s12">
+        <div id="content-tab1">
+          <div id="skills" class="row">
+
+          </div>
           
-    </div>
+        </div>
+
+      </div>
+      <div id="test2" class="col s12">
+        <div id="detail" class="row center-align">
+
+        </div>
+      </div>
+    </div>      
+  </div>
 
   
 
@@ -202,6 +223,9 @@
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         success: function(jsonData) {  
             alert(jsonData); 
+            $('ul.tabs').tabs('select_tab', 'test1');
+            $("#tab1").trigger("click");
+
         },
         error: function(errorMsg){
             alert(errorMsg.statusText);
@@ -251,6 +275,44 @@
     });
 
 
+  $(document).on('click', 'button.viewProfile', function(){
+    var abc = $(this).closest(".viewProfile").attr("id");
+
+    $('ul.tabs').tabs('select_tab', 'test2');
+
+    $.ajax({
+      type: 'POST',
+      url: 'data/applicationLayer.php',
+      dataType: 'json',
+      data: {'action':'GET_SKILL_USER_DATA', 'id': abc},
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      success: function(jsonData) {
+        $("#detail").children().remove();
+
+        var code = "<h5>Year Birthdate</h5><p>" + jsonData[0].year + "</p><br/>";
+        code += "<h5>Country</h5><p>" + jsonData[0].country + "</p><br/>";
+        code += "<h5>City</h5><p>" + jsonData[0].city + "</p><br/>";
+        code += "<h5>Website</h5><p>" + jsonData[0].website + "</p><br/>";
+        code += "<h5>Phone</h5><p>" + jsonData[0].phone + "</p><br/>";
+        code += "<h5>University</h5><p>" + jsonData[0].university + "</p><br/>";
+        code += "<h5>Interests</h5><p>" + jsonData[0].interests + "</p><br/>";
+        code += "<h5>More</h5><p>" + jsonData[0].more + "</p><br/>";
+
+
+
+        $("#detail").append(code);
+
+      },
+      error: function(errorMsg){
+        alert(errorMsg.statusText);
+      }
+    });
+
+  });
+
+  
+
+
 
     $(document).on('click', 'button.addToCart', function(){
       var abc = $(this).closest(".addToCart").attr("id");
@@ -280,16 +342,54 @@
     });
   
 
+    
+
+    $(document).on('click', '#tab1', function(){
+      $.ajax({
+        type: 'POST',
+        url: 'data/applicationLayer.php',
+        dataType: 'json',
+        data: {'action':'GET_SKILLS'},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        success: function(jsonData) {
+          $("#skills").children().remove();
+          var cards = "";
+          var dataCount = jsonData.length;
+          for (var i=0; i<jsonData.length-1; i++){
+            cards += "<div class='col m4'><div class='card blue-grey darken-1'><div class='card-content white-text'>";
+            cards += "<span class='card-title'>" + jsonData[i].title + "</span><br/>";
+            cards += "<span class='card-subtitle'>" + jsonData[i].category + "</span><br/>";
+            cards += "<span class='card-subtitle'>Qty: " + jsonData[i].quantity + "</span>";
+            cards += "<br/><br/><p>" + jsonData[i].description + "</p></div>";
+            if (jsonData[dataCount-1].sessionEmail == jsonData[i].email) {
+              // cards += "</div></div>";
+              cards += "<div class='card-action'> ";
+              cards += "</div></div></div>";
+            } else {
+              cards += "<div class='card-action'> <button class='addToCart' id='" + jsonData[i].skillId + "'>ADD TO CART</button>";
+              cards += "<button class='viewProfile' id='" + jsonData[i].skillId + "'>View User Profile</button> </div></div></div>";
+            }
+            
 
 
+            //<a href='#'>See Profile</a>
 
 
+          }
+          $("#skills").append(cards);
+        },
+        error: function(errorMsg){
+          alert(errorMsg.statusText);
+        }
+    });
+    });
 
 
     $('.modal-trigger').leanModal();
     $('select').material_select(); 
     
   });
+
 
 
 
