@@ -178,7 +178,7 @@
             <div class="row">
                 <div class="input-field col s12">
                     <textarea id="messageReply" class="materialize-textarea"></textarea>
-                    <label for="messageReply">Reply</label>
+                    <label for="messageReply2">Reply</label>
                 </div>
               </div>
 
@@ -417,7 +417,7 @@
                     //alert("nope");
                      // $("#purchase").hide();
                      // $("#cancelPurchase").hide();
-                     alert("Cart empty.");
+                     alert("No past orders.");
                 }
             },
             error: function(errorMsg){
@@ -563,7 +563,7 @@
           data: {'action':'GET_USER_DATA'},
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           success: function(jsonData) {
-            alert("User data received");
+            //alert("User data received");
             $("#userYear").val(jsonData[0].year);
             $("#userCountry").val(jsonData[0].country);
             $("#userCity").val(jsonData[0].city);
@@ -657,7 +657,7 @@
             'reply': $('#messageReply').val(),
             'sendTo': globalEmail
       	};
-      	//alert(globalEmail);
+      	//alert($('#messageReply').val());
       	$.ajax({
 	        type: 'POST',
 	        url: 'data/applicationLayer.php',
@@ -665,7 +665,7 @@
 	        data: {'data':jsonObject, 'action':'REPLY'},
 	        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 	        success: function(jsonData) {  
-	            alert(jsonData); 
+	            alert("Message sent"); 
 	        },
 	        error: function(errorMsg){
 	            alert(errorMsg.statusText);

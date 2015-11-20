@@ -240,7 +240,7 @@
 		    			}
 		    		}
 
-		    		array_push($data, array('orderId' => $row['orderId'], 'quantity' => $row['quantity']));
+		    		array_push($data, array('orderId' => $row['orderId'], 'quantity' => $row['quantity'], 'skillId' => $row['skill']));
 		    	}
 
 		    	$response = array('message' => 'OK', 'data' => $data, 'secondData' => $secondData, 'thirdData' => $thirdData);
@@ -330,7 +330,36 @@
         }
     }
 
+   //  function quantity($skill)
+   //  {
 
+   //  	$conn = connect();
+
+   //  	if($conn != null)
+   //  	{
+   //  		$sql = "SELECT quantity FROM Skill WHERE skillId = $skill";
+
+   //  		$result = $conn->query($sql);
+   //  		$response = array();
+		 //    if ($result->num_rows > 0) {
+		    			
+		 //    	while ($row = $result->fetch_assoc()) {
+		 //    		array_push($response,'quantity' => $row['quantity']);
+		 //    	}
+
+		 //    	$conn->close();
+		 //    	return $response;
+			// }
+			// else {
+			// 	$response = array("message" => "error");
+			// }
+   //  	}
+   //  	else {
+   //      	# Connection to Database was not successful
+   //      	$conn->close();
+   //      	return errors(500);
+    //     }
+    // }
 
     function hirePeople($email, $name)
     {
@@ -439,7 +468,7 @@
             if ($response["message"] == "OK") {
                 if (mysqli_query($conn, $sql)) {
                     $conn->close();
-                    return array("status" => "COMPLETE");
+                    return array("message" => "COMPLETE");
                 } 
                 else {
                     $conn->close();
@@ -760,9 +789,12 @@
     	}
     }
 
-    function addMessageReply($from, $message, $sendTo)
+    function addMessageReply($from, $data)
     {
     	$conn = connect();
+
+    	$message = $data['reply'];
+    	$sendTo = $data['sendTo'];
 
         if ($conn != null) {
         	$dateNow = date("Y/m/d");
@@ -773,15 +805,18 @@
                 return array("status" => "COMPLETE");
         	}else {
                 $conn->close();
+                echo "error in connection";
                 return errors(409);
             }
         }
         else 
     	{
     		$conn->close();
+    		echo "error null";
     		return errors(409);
     	}
     }
+
 
 
     function getAllSkillUserData($id){
@@ -832,14 +867,5 @@
             return errors(409);
         }
     }
-
-
-
-
-
-
-
-
-
 
 ?>

@@ -464,9 +464,8 @@
 		if (isset($_SESSION['email']))
 		{
 
-			$message = $_POST['reply'];
-			$toEmail = $_POST['sendTo'];
-			$result = addMessageReply($_SESSION['email'], $message, $sendTo);
+			$data = $_POST['data'];
+			$result = addMessageReply($_SESSION['email'], $data);
 
 			echo json_encode($result);
 			
