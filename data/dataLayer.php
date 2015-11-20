@@ -150,13 +150,13 @@
     {
 		// Starting the session
 	    session_start();
-	    if (! isset($_SESSION['firstName']))
+	    if (! isset($_SESSION['fName']))
 	    {
-	    	$_SESSION['firstName'] = $fName;
+	    	$_SESSION['fName'] = $fName;
 	    }
-	    if (! isset($_SESSION['lastName']))
+	    if (! isset($_SESSION['lName']))
 	    {
-	    	$_SESSION['lastName'] = $lName;
+	    	$_SESSION['lName'] = $lName;
 	    }
 	    if (! isset($_SESSION['email']))
 	    {
@@ -167,8 +167,8 @@
     function getSession()
     {
     	session_start();
-    	if (isset($_SESSION['firstName'])) {
-    		$response = array('message' => 'OK' ,'name' => $_SESSION['firstName']);
+    	if (isset($_SESSION['fName'])) {
+    		$response = array('message' => 'OK' ,'name' => $_SESSION['fName']);
     		return $response;
     	} else {
     		$response = array('name' => 'user');
@@ -293,16 +293,29 @@
     function getAllSkills(){
     	$conn = connect();
 
+
+    	session_start();
+    	if (isset($_SESSION['email']) ){
+    		$sessionEmail = $_SESSION['email'];
+    	} else {
+    		$sessionEmail = "";
+    	}
+
         if ($conn != null) {
         	$sql = "SELECT * FROM Skill";
 			$result = $conn->query($sql);
+
 			
 			# Items exist
 			$response = array();
 			if ($result->num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
-					array_push($response,array('skillId' => $row['skillId'], 'title' => $row['title'], 'description' => $row['description'],'email' => $row['email'],'category' => $row['category'], 'quantity' => $row['quantity']));
+					array_push($response, array('skillId' => $row['skillId'], 'title' => $row['title'], 'description' => $row['description'],'email' => $row['email'],'category' => $row['category'], 'quantity' => $row['quantity']));
 				}
+				array_push($response, array('sessionEmail' => $sessionEmail));
+
+				//echo var_dump($response);
+
 				return $response;
 			}
 			else {
@@ -375,6 +388,7 @@
     	}
     }
 
+
     function updateUserProfile($data, $userName){
         $conn = connect();
 
@@ -408,6 +422,234 @@
             $conn->close();
             return errors(500);
         }
+    }
+
+
+
+    function addCart($email, $id){
+        $conn = connect();
+
+        if ($conn != null) {
+            $sql = "INSERT INTO Cart (email, skill, quantity, status) VALUES ('$email', '$id', '1', 'P')";
+            $response = validate($email, $id);
+            echo var_dump($response);
+
+            if ($response["message"] == "OK") {
+                if (mysqli_query($conn, $sql)) {
+                    $conn->close();
+                    return array("status" => "COMPLETE");
+                } 
+                else {
+                    $conn->close();
+                    return errors(409);
+                }
+
+
+            }
+            else{
+                return array("message" => "ERROR");
+
+            }
+        }
+        else 
+        {
+            $conn->close();
+            return errors(409);
+        }
+
+    }
+
+    function validate($email, $id){
+        $conn = connect();
+
+        if ($conn != null) {
+
+            $sql = "SELECT * FROM Cart WHERE email = '$email' AND status = 'P' AND skill='$id' ";
+
+            $result = $conn->query($sql);
+
+            $response = array();
+
+            if ($result->num_rows > 0){
+                $response = array("message" => "ERROR");
+                $conn->close();
+                return $response; 
+            }
+            else {
+                $response = array("message" => "OK");
+                $conn->close();
+                return $response; 
+            }
+            
+        }
+        else 
+        {
+            $conn->close();
+            return errors(409);
+        }
+
+    }
+/*
+    function addCart($email, $id)
+    {
+    	$conn = connect();
+
+    	if ($conn != null) {
+    		
+    		$sql = "INSERT INTO Cart (email, skill, quantity, status) VALUES ('$email', '$id', '1', 'P')";
+
+    		$response = validate($email);
+
+    		echo var_dump($response);
+
+    		if ($response["message"] == "OK") {
+
+    			$amount = count($response['ID']);
+    			$flag = 0;
+    			for ($i = 0; $i < $amount; $i++) { 
+    				//echo "ID = " . $id . ", SkillID = " . $response['ID'][$i]['skillId'];
+  					if ($id == $response['ID'][$i]['skillId']) {
+  						$flag++;
+  					}
+    			}
+
+    			if ($flag == 0) {
+    				if (mysqli_query($conn, $sql)) {
+    					$response = array("message" => "OK");
+    				} else {
+    					$response = array("message" => "ERROR");
+    				}
+    			} else {
+    				$response = array("message" => "ERROR2","content" => "You can't add the same skill more than one time.");
+    			}
+
+    			
+    		} else {
+    			$response = array("message" => "ERROR");
+    		}
+
+    		
+
+    		return $response;
+
+    	}
+    	else 
+    	{
+    		$conn->close();
+    		return errors(409);
+    	}
+    }
+
+    function validate($email)
+    {
+    	$conn = connect();
+
+    	if ($conn != null) {
+
+    		$sql = "SELECT * FROM Cart WHERE email = '$email' AND status = 'P'";
+
+    		$result = $conn->query($sql);
+
+    		$response = array();
+
+        	if ($result->num_rows > 0)
+			{
+				//echo "entra";
+				$arrayID = array();
+				
+				while($row = $result->fetch_assoc()) 
+		    	{
+		    		//echo $row['skill'];
+		    		array_push($arrayID, array('skillId' => $row['skill']));
+
+		    	}
+
+		    	$response = array("message" => "OK", "ID" => $arrayID);
+		    	return $response;
+		    }
+		    else {
+                $response = array("message" => "OK");
+				$conn->close();
+				return $response; // no existen items
+			}
+    		# traer los elementos de cart y regresar el skill agreagdo en cada uno
+    		# para despues  comparar el id del skill que se va agregar con los resultados
+    	}
+    	else 
+    	{
+    		$conn->close();
+    		return errors(409);
+    	}
+    }
+    */
+
+    function messages($email)
+    {
+    	$conn = connect();
+
+    	if ($conn != null) {
+    		$sql = "SELECT * FROM Message WHERE sentTo = '$email'";
+
+    		$result = $conn->query($sql);
+
+    		$response = array();
+    		$data = array();
+    		if ($result->num_rows > 0) {
+    			while ($row = $result->fetch_assoc()) {
+    				$name = getName($row['sentFrom']);
+    				array_push($data, array("name" => $name, "email" => $row['sentFrom'], "id" => $row['messageId']));
+    			}
+
+    			$response = array("message" => "OK", "data" => $data);
+    			//echo var_dump($response);
+
+    			return $response;
+    		}
+    		else {
+    			$conn->close();
+				return $response;
+    		}
+    	}
+    	else 
+    	{
+    		$conn->close();
+    		return errors(409);
+    	}
+    }
+
+    function getName($email)
+    {
+    	$conn = connect();
+
+    	if ($conn != null) {
+    		$sql = "SELECT fName, lName FROM Client WHERE email = '$email'";
+
+    		$result = $conn->query($sql);
+
+    		$data = array();
+    		$response = array();
+
+    		if ($result->num_rows > 0) {
+    			while ($row = $result->fetch_assoc()) {
+    				array_push($data,array("name" => $row['fName'] . " " . $row['lName']));
+    			}
+
+    			$response =$data;
+
+    			return $response;
+    		}
+    		else {
+				$conn->close();
+				return $response; // no existen items
+			}
+
+    	}
+    	else 
+    	{
+    		$conn->close();
+    		return errors(409);
+    	}
+
     }
 
 ?>

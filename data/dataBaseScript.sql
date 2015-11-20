@@ -14,7 +14,6 @@ CREATE TABLE Client (
 );
 
 
-
 CREATE TABLE Skill(
 	skillId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	title VARCHAR(250) NOT NULL,
@@ -24,6 +23,12 @@ CREATE TABLE Skill(
 	FOREIGN KEY (email)
 		REFERENCES Client (email)
 		ON DELETE CASCADE,
+	email VARCHAR(250) NOT NULL,
+	category VARCHAR(250) NOT NULL,
+    quantity INT NOT NULL,
+	FOREIGN KEY (email)
+		REFERENCES Client (email)
+		ON DELETE CASCADE
 
 );
 
@@ -54,13 +59,3 @@ CREATE TABLE Message(
 		REFERENCES Client (email)
 		ON DELETE CASCADE
 );
-
-INSERT INTO Client(fName, lName, email, passwrd)
-VALUES  ('Jorge', 'Perales', 'jorgelp94', 'test'),
-		('Diego', 'Aleman', 'diegoaleman', 'test');
-
-
-
-
-
-

@@ -29,6 +29,13 @@
 						break;
 		case 'UDATE_PROFILE': 	updateProfile();
 								break;
+		case 'ADD_TO_CART': addToCart();
+							break;
+		case 'MSG':		loadMessages();
+						break;
+		case 'END_SES': endSession();
+						break;
+
 
 	}
 
@@ -206,8 +213,8 @@
 	function createNewPost()
 	{
 		// TO DO: make sure session is active
-		$firstName = $_SESSION['firstName'];
-		$lastName = $_SESSION['lastName'];
+		$firstName = $_SESSION['fName'];
+		$lastName = $_SESSION['lName'];
 		$email = $_SESSION['email'];
 		$title = $_POST['title'];
 		$description = $_POST['description'];
@@ -327,6 +334,7 @@
 	}
 
 
+
 	function updateProfile(){
 
 		session_start();
@@ -339,6 +347,73 @@
 		}
 		else{
 			die(json_encode($result));
+		}
+
+	}
+
+
+	function addToCart()
+	{
+		session_start();
+		if (isset($_SESSION['email'])) {
+			$id = $_POST['id'];
+
+			$result = addCart($_SESSION['email'], $id);
+
+			if ($result['message'] == 'COMPLETE') {
+				$message = "Skill added to cart!";
+
+				echo json_encode($message);
+			} 
+			else {
+				echo json_encode($result);
+			}
+
+
+		}
+		else
+		{
+			die(json_encode(errors(417)));
+		}
+	}
+
+	function loadMessages()
+	{
+		session_start();
+		if (isset($_SESSION['email'])) {
+			
+			$result = messages($_SESSION['email']);
+
+			if ($result['message'] == 'OK') {
+				$message = "Messages loaded correctly!";
+
+				echo json_encode($result);
+			} else {
+				echo json_encode($result);
+			}
+
+		}
+		else
+		{
+			die(json_encode(errors(417)));
+		}
+
+	}
+
+	function endSession(){
+		session_start();
+		if (isset($_SESSION['fName']) && isset($_SESSION['lName']) && isset($_SESSION['email']))
+		{
+			unset($_SESSION['fName']);
+			unset($_SESSION['lName']);
+			unset($_SESSION['email']);
+			session_destroy();
+			
+			echo json_encode(array('success' => 'Session deleted'));   	    
+		}
+		else
+		{
+			die(json_encode(errors(417)));
 		}
 
 	}
