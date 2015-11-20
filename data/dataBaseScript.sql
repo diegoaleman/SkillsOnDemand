@@ -2,29 +2,29 @@ CREATE TABLE Client (
 	fName VARCHAR(30) NOT NULL,
     lName VARCHAR(30) NOT NULL,
     email VARCHAR(50) NOT NULL PRIMARY KEY,
-    passwrd VARCHAR(50) NOT NULL
-    
+    passwrd VARCHAR(50) NOT NULL,
+	yearBdate INT,
+	country VARCHAR(250),
+	city VARCHAR(250),
+	website VARCHAR(250),
+	phone INT,
+	university VARCHAR(250),
+	interests VARCHAR(250),
+	more VARCHAR(250)
 );
 
 
-CREATE TABLE Category(
-	categoryId VARCHAR(250) NOT NULL PRIMARY KEY,
-	title VARCHAR(250) NOT NULL,
-	description VARCHAR(250) NOT NULL
-);
 
 CREATE TABLE Skill(
 	skillId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	title VARCHAR(250) NOT NULL,
 	description VARCHAR(250) NOT NULL,
-	email VARCHAR(250) NOT NULL,
-	categoryId VARCHAR(250) NOT NULL,
+	category VARCHAR(250) NOT NULL,
+	quantity INT NOT NULL,
 	FOREIGN KEY (email)
 		REFERENCES Client (email)
 		ON DELETE CASCADE,
-	FOREIGN KEY (categoryId)
-		REFERENCES Category (categoryId)
-		ON DELETE CASCADE
+
 );
 
 CREATE TABLE Cart(

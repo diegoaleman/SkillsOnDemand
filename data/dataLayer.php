@@ -375,4 +375,39 @@
     	}
     }
 
+    function updateUserProfile($data, $userName){
+        $conn = connect();
+
+        if ($conn != null){
+
+            
+                $year = $data['yearBdate'];
+                $country = $data['country'];
+                $city = $data['city'];
+                $website = $data['website'];
+                $phone = $data['phone'];
+                $university = $data['university'];
+                $interests = $data['interests'];
+                $additional = $data['additional'];
+
+
+
+                $sql = "UPDATE Client SET yearBdate='$year', country='$country', city='$city', website='$website', phone='$phone', university='$university', interests='$interests',more='$additional'  WHERE email='$userName'";
+                if (mysqli_query($conn, $sql)) {
+                    $conn->close();
+                    return array("status" => "COMPLETE");
+                } 
+                else {
+                    $conn->close();
+                    return errors(409);
+                }
+            
+            
+        }
+        else {
+            $conn->close();
+            return errors(500);
+        }
+    }
+
 ?>

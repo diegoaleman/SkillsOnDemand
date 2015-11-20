@@ -16,12 +16,29 @@
 
 #community{
 	height:300px;
+	color: white;
 }
 
-#community{
+#community p{
+	font-size: 30px;
 
 }
 
-#community{
-	
+#quote{
+	height: 200px;
+	color: white;
+}
+
+
+#btnNewSkill{
+	margin: 20px;
+	position: fixed;
+}
+
+#menuDrop{
+	margin-top: 15px;
+}
+
+#flechaDropdown{
+	margin-top: -13px;
 }

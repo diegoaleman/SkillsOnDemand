@@ -27,6 +27,8 @@
 							break;
 		case 'BUY':		buy();
 						break;
+		case 'UDATE_PROFILE': 	updateProfile();
+								break;
 
 	}
 
@@ -320,6 +322,23 @@
 		else
 		{
 			die(json_encode(errors(417)));
+		}
+
+	}
+
+
+	function updateProfile(){
+
+		session_start();
+
+		$result = updateUserProfile($_POST['data'], $_SESSION['email']);
+
+
+		if ($result['status'] == 'COMPLETE'){
+			echo json_encode("We succesfully updated your profile");
+		}
+		else{
+			die(json_encode($result));
 		}
 
 	}

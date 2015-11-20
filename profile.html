@@ -11,7 +11,8 @@
 </head>
 <body>
 
-	<!-- Dropdown Structure -->
+
+	<!-- Dropdown Structure 
 	<ul id="dropdown1" class="dropdown-content">
 	  <li><a href="#!">Logout</a></li>
 	</ul>
@@ -21,13 +22,73 @@
 	    <ul class="right hide-on-med-and-down">
 	      <li><a href="index.html">Main</a></li>
 	      <li><a href="index.html">Components</a></li>
-	      <!-- Dropdown Trigger -->
+	      
 	      <li id="accountName"><a class="dropdown-button" href="#!" data-activates="dropdown1"><i class="material-icons right">arrow_drop_down</i></a></li>
 	    </ul>
 	  </div>
 	</nav>
 	<br />
 	<br />
+    -->
+
+
+
+    <!--
+
+            <a href="index.html" class="brand-logo">SkillsOnDemand</a>
+            
+            <a id="nav-mobile accountName" class='dropdown-button btn right hide-on-med-and-down' href='#' data-activates='dropdown1'></a>
+
+           
+            <ul id='dropdown1' class='dropdown-content'>
+                <li><a href="index.html">Main</a></li>
+                <li><a href="#!">two</a></li>
+                <li class="divider"></li>
+                <li><a href="#!">Logout</a></li>
+            </ul>
+        
+        -->
+
+
+
+
+    <!--NAVBAR-->
+    <nav id='navBar'>
+        <div class="nav-wrapper container ">
+            <a href="index.html" class="brand-logo">SkillsOnDemand</a>
+            
+
+
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a id="accountName" href='#'></a></li>
+                <li><a id="menuDrop" class='btn-floating btn waves-effect waves-light dropdown-button right hide-on-med-and-down' href='#' data-activates='dropdown1'><i id='flechaDropdown' class="material-icons">arrow_drop_down</i></a></li>
+
+            </ul>
+
+
+
+            
+           
+            <ul id='dropdown1' class='dropdown-content'>
+                <li><a href="searchSkills.html">Seach</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li class="divider"></li>
+                <li><a href="#!">Logout</a></li>
+            </ul>    
+        </div>
+    </nav>
+
+
+
+
+
+
+
+
+
+
+
+    
 
 	<div class="row container">
     <div class="col s12">
@@ -75,7 +136,85 @@
     	Test 4
     </div>
      <div id="test5" class="col s12">
-    	Test 5
+    	<div id="registrationContainer" class="section">
+        <div class="container">
+            <h1>Tell us more about yourself</h1>
+            <h3>*None of this is required</h3>
+        
+            <div class="row">
+                <form class="col s12 ">
+
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="userYear" type="text" class="validate">
+                            <label for="userYear">Year Birthdate</label>
+                        </div>
+                    </div>
+                    
+
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="userCountry" type="text" class="validate">
+                            <label for="userCountry">Country</label>
+                        </div>
+
+                        <div class="input-field col s6">
+                            <input id="userCity" type="text" class="validate">
+                            <label for="userCity">City</label>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="userWebsite" type="text" class="validate">
+                            <label for="userWebsite">Website</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="userPhone" type="text" class="validate">
+                            <label for="userPhone">Phone</label>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="userUniversity" type="text" class="validate">
+                            <label for="userUniversity">University</label>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="userInterests" class="materialize-textarea"></textarea>
+                            <label for="userInterests">What are some of your interests</label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="userAdditional" class="materialize-textarea"></textarea>
+                            <label for="userAdditional">Tell us more about yourself</label>
+                        </div>
+                    </div>
+                    
+              
+                    
+                    <div class="row">
+                        <input class="btn-large" type="button" id="updateUserData" value="Save"/>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        
+    </div>
     </div>
   	</div>
 
@@ -87,6 +226,11 @@
 <script type="text/javascript">
 	$( document ).on('ready', function() {
 
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15 // Creates a dropdown of 15 years to control year
+        });
+
 		 $.ajax({
                 type: "POST",
                 url: "data/applicationLayer.php",
@@ -94,7 +238,11 @@
                 data: {'action':'NAME'},
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 success: function(jsonData) {
-                    $("#accountName").html(jsonData);
+
+
+                    $("#accountName").html("Welcome again " + jsonData + " ");
+
+
                     $("#tab1").trigger("click");
                 },
                 error: function(errorMsg){
@@ -205,9 +353,7 @@
 	$("#tab4").on("click", function(){
 		alert("tab 4");
 	});
-	$("#tab5").on("click", function(){
-		alert("tab 5");
-	});
+
 
 	$("#hire").on("click", function(){
 				$.ajax({
@@ -225,6 +371,48 @@
                     }
                 });
 	});
+
+
+    $("#updateUserData").on('click',function(){
+        var jsonObject = {
+            'yearBdate': parseInt($('#userYear').val()),
+            'country': $('#userCountry').val(),
+            'city': $('#userCity').val(),
+            'website': $('#userWebsite').val(),
+            'phone': parseInt($('#userPhone').val()),
+            'university': $('#userUniversity').val(),
+            'interests': $('#userInterests').val(),
+            'additional': $('#userAdditional').val()
+        };
+
+
+        $.ajax({
+            type: 'POST',
+            url: 'data/applicationLayer.php',
+            dataType: 'json',
+            data: {'data':jsonObject, 'action':'UDATE_PROFILE'},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            success: function(jsonData) {  
+                alert(jsonData); 
+            },
+            error: function(errorMsg){
+                alert(errorMsg.statusText);
+            }
+        });
+    });
+
+
+
+   
+
+
+
+
+
+
+
+
+
 
 	});
 </script
