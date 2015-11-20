@@ -332,13 +332,15 @@
 
 
 
-    function hirePeople($email)
+    function hirePeople($email, $name)
     {
     	$conn = connect();
 
     	if($conn != null)
     	{
     			$result = getCartItems($email, 'P');
+
+    			echo var_dump($result);
     			if ($result['message'] == 'OK') {
     				//echo var_dump($result);
     				//echo $result['secondData'][0]['sEmail'];
@@ -361,7 +363,7 @@
     					//echo $emailToSend;
     					$dateNow = date("Y/m/d");
     					//echo $dateNow;
-    					$sql2 = "INSERT INTO Message (sentTo, sentFrom, messageDate, message, status) VALUES ('$emailToSend', '$email', '$dateNow', '$personName wants to hire you!', 'N')";
+    					$sql2 = "INSERT INTO Message (sentTo, sentFrom, messageDate, message, status) VALUES ('$emailToSend', '$email', '$dateNow', '$name wants to hire you!', 'N')";
 
 
     					if (mysqli_query($conn, $sql2)) {
