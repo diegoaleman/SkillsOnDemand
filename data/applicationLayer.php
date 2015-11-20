@@ -304,7 +304,7 @@
 		session_start();
 		if (isset($_SESSION['email'])) {
 			
-			$result = hirePeople($_SESSION['email']);
+			$result = hirePeople($_SESSION['email'], $_SESSION['fName']);
 
 			if ($result['message'] == 'OK')
 			{

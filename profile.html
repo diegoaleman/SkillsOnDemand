@@ -436,6 +436,7 @@
 
 
 	$("#tab4").on("click", function(){
+
 		$.ajax({
             type: "POST",
             url: "data/applicationLayer.php",
@@ -452,6 +453,7 @@
                     for(i = 0; i < jsonData.data.length; i ++)
                     {
                         tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].name[i].name + '</td><td>' + jsonData.data[i].email + '</td><td><button id="' + jsonData.data[i].id + '" type="button">Message</button></td></tr>';
+
                     }
 
                     //alert(tableRows); 
@@ -542,7 +544,10 @@
    
 
 
-
+    $(document).on('click', 'button.showMessage', function(){
+      var abc = $(this).closest(".showMessage").attr("id");
+      
+  	});
 
 
 
