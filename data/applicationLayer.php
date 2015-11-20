@@ -27,6 +27,10 @@
 							break;
 		case 'BUY':		buy();
 						break;
+		case 'ADD_TO_CART': addToCart();
+							break;
+		case 'MSG':		loadMessages();
+						break;
 
 	}
 
@@ -322,6 +326,57 @@
 			die(json_encode(errors(417)));
 		}
 
+	}
+
+
+	function addToCart()
+	{
+		session_start();
+		if (isset($_SESSION['email'])) {
+			$id = $_POST['id'];
+
+			$result = addCart($_SESSION['email'], $id);
+
+			if ($result['message'] == 'OK') {
+				$message = "Skill added to cart!";
+
+				echo json_encode($message);
+			} else if($result['message'] == 'ERROR2') {
+				$message = $result['content'];
+				echo json_encode($message);
+			}
+			else {
+				echo json_encode($result);
+			}
+
+
+		}
+		else
+		{
+			die(json_encode(errors(417)));
+		}
+	}
+
+	function loadMessages()
+	{
+		session_start();
+		if (isset($_SESSION['email'])) {
+			
+			$result = messages($_SESSION['email']);
+
+			if ($result['message'] == 'OK') {
+				$message = "Messages loaded correctly!";
+
+				echo json_encode($result);
+			} else {
+				echo json_encode($result);
+			}
+
+		}
+		else
+		{
+			die(json_encode(errors(417)));
+		}
 	}
 
 ?>

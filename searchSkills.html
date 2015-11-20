@@ -202,13 +202,22 @@
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       success: function(jsonData) {
         var cards = "";
-        for (var i=0; i<jsonData.length; i++){
+        var dataCount = jsonData.length;
+        for (var i=0; i<jsonData.length-1; i++){
           cards += "<div class='col m4'><div class='card blue-grey darken-1'><div class='card-content white-text'>";
           cards += "<span class='card-title'>" + jsonData[i].title + "</span><br/>";
           cards += "<span class='card-subtitle'>" + jsonData[i].category + "</span><br/>";
           cards += "<span class='card-subtitle'>Qty: " + jsonData[i].quantity + "</span>";
           cards += "<br/><br/><p>" + jsonData[i].description + "</p></div>";
-          cards += "<div class='card-action'> <button class='addToCart' >ADD TO CART</button> </div></div></div>"
+          if (jsonData[dataCount-1].sessionEmail == jsonData[i].email) {
+            // cards += "</div></div>";
+            cards += "<div class='card-action'> ";
+            cards += "</div></div></div>";
+          } else {
+            cards += "<div class='card-action'> <button class='addToCart' id='" + jsonData[i].skillId + "'>ADD TO CART</button>";
+            cards += "<button class='viewProfile' id='" + jsonData[i].skillId + "'>View User Profile</button> </div></div></div>";
+          }
+          
 
 
           //<a href='#'>See Profile</a>
@@ -224,8 +233,26 @@
 
 
 
-    $(".addToCart").on('click', function(){
-      alert("click");
+    $(document).on('click', 'button.addToCart', function(){
+      var abc = $(this).closest(".addToCart").attr("id");
+      //alert(abc);
+
+      $.ajax({
+        type: 'POSt',
+        url: 'data/applicationLayer.php',
+        dataType: 'json',
+        data: {'action':'ADD_TO_CART',
+               'id': abc},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        success: function(jsonData) {
+          alert(jsonData);
+          
+        },
+        error: function(errorMsg) {
+          alert(errorMsg.statusText);
+        }
+      });
+
     });
   
 
