@@ -73,7 +73,7 @@
                 <li><a href="searchSkills.html">Seach</a></li>
                 <li><a href="profile.html">Profile</a></li>
                 <li class="divider"></li>
-                <li><a href="#!">Logout</a></li>
+                <li><a id='logout' href="#!">Logout</a></li>
             </ul>    
         </div>
     </nav>
@@ -130,22 +130,34 @@
         </div>
     </div>
     <div id="test3" class="col s12">
-    	Test 3
+        <div id="content-tab3">
+                <div id="userPosts">
+                    <table class="highlight centered" id="userPostsTable">
+                        <tr>
+                            <th>Skill</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </table>    
+                </div>
+        </div>
+        
     </div>
     <div id="test4" class="col s12">
-    	<div id="test3" class="col s12">
-	    	<div id="content-tab3">
-	                <div id="messagesTable">
-	                    <table class="highlight centered" id="messageTable">
-	                        <tr>
-	                            <th>From</th>
-	                            <th>Email</th>
-	                            <th>Message</th>
-	                        </tr>
-	                    </table>	
-	                </div>
-	        </div>
-	    </div>
+    	
+    	<div id="content-tab">
+                <div id="messagesTable">
+                    <table class="highlight centered" id="messageTable">
+                        <tr>
+                            <th>From</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                        </tr>
+                    </table>	
+                </div>
+        </div>
+	    
     </div>
      <div id="test5" class="col s12">
     	<div id="registrationContainer" class="section">
@@ -158,52 +170,52 @@
 
                     <div class="row">
                         <div class="input-field col s6">
+                            <p>Year Birthdate</p>
                             <input id="userYear" type="text" class="validate">
-                            <label for="userYear">Year Birthdate</label>
                         </div>
                     </div>
                     
 
                     <div class="row">
                         <div class="input-field col s6">
+                            <p>Country</p>
                             <input id="userCountry" type="text" class="validate">
-                            <label for="userCountry">Country</label>
                         </div>
 
                         <div class="input-field col s6">
+                            <p>City</p>
                             <input id="userCity" type="text" class="validate">
-                            <label for="userCity">City</label>
                         </div>
                     </div>
 
 
                     <div class="row">
                         <div class="input-field col s6">
+                            <p>Website</p>
                             <input id="userWebsite" type="text" class="validate">
-                            <label for="userWebsite">Website</label>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="input-field col s6">
+                            <p>Phone</p>
                             <input id="userPhone" type="text" class="validate">
-                            <label for="userPhone">Phone</label>
                         </div>
                     </div>
 
 
                     <div class="row">
                         <div class="input-field col s12">
+                            <p>University</p>
                             <input id="userUniversity" type="text" class="validate">
-                            <label for="userUniversity">University</label>
                         </div>
 
                     </div>
 
                     <div class="row">
                         <div class="input-field col s12">
+                            <p>What are some of your interests</p>
                             <textarea id="userInterests" class="materialize-textarea"></textarea>
-                            <label for="userInterests">What are some of your interests</label>
                         </div>
                     </div>
 
@@ -211,8 +223,8 @@
 
                     <div class="row">
                         <div class="input-field col s12">
+                            <p>Tell us more about yourself</p>
                             <textarea id="userAdditional" class="materialize-textarea"></textarea>
-                            <label for="userAdditional">Tell us more about yourself</label>
                         </div>
                     </div>
                     
@@ -237,6 +249,23 @@
 </body>
 <script type="text/javascript">
 	$( document ).on('ready', function() {
+
+            $('#logout').on('click', function(){
+                $.ajax({
+                    type: 'POST',
+                    url: 'data/applicationLayer.php',
+                    dataType: 'json',
+                     data: {'action':'END_SES'},
+                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                     success: function(jsonData) {
+                        window.location.replace('index.html');
+                    },
+                    error: function(errorMsg){
+                        alert(errorMsg.statusText);
+                        window.location.replace('index.html');
+                    }
+                });
+            });
 
         $('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
@@ -293,121 +322,165 @@
 	
 	$("#tab1").on("click", function(){
 		//alert("tab 1");
-				$.ajax({
-                    type: "POST",
-                    url: "data/applicationLayer.php",
-                    dataType: "json",
-                    data: {'action':'CART', 'status':'P'},
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    success: function(jsonData) {
-                        var tableRows = "";
-                        $("#cartTable").find("td").remove();
-                        if (jsonData.message == 'OK')
-                        {
-                            //alert("datos");
-                            for(i = 0; i < jsonData.data.length; i ++)
-                            {
-                                tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].orderId + '</td><td>' + jsonData.secondData[i].sTitle + '</td><td>' + jsonData.thirdData[i].name + ' ' + jsonData.thirdData[i].last + '</td><td>' + jsonData.secondData[i].sEmail + '</td></tr>';
-                            } 
+		$.ajax({
+            type: "POST",
+            url: "data/applicationLayer.php",
+            dataType: "json",
+            data: {'action':'CART', 'status':'P'},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            success: function(jsonData) {
+                var tableRows = "";
+                $("#cartTable").find("td").remove();
+                if (jsonData.message == 'OK')
+                {
+                    //alert("datos");
+                    for(i = 0; i < jsonData.data.length; i ++)
+                    {
+                        tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].orderId + '</td><td>' + jsonData.secondData[i].sTitle + '</td><td>' + jsonData.thirdData[i].name + ' ' + jsonData.thirdData[i].last + '</td><td>' + jsonData.secondData[i].sEmail + '</td></tr>';
+                    } 
 
-                            $("#cartTable").append(tableRows);
-                        }
-                        else
-                        {
-                            //alert("nope");
-                             // $("#purchase").hide();
-                             // $("#cancelPurchase").hide();
-                             alert("Cart empty.");
-                        }
-                    },
-                    error: function(errorMsg){
-                        alert(errorMsg.statusText);
-                    }
-                });
+                    $("#cartTable").append(tableRows);
+                }
+                else
+                {
+                    //alert("nope");
+                     // $("#purchase").hide();
+                     // $("#cancelPurchase").hide();
+                     alert("Cart empty.");
+                }
+            },
+            error: function(errorMsg){
+                alert(errorMsg.statusText);
+            }
+        });
 	});
 	$("#tab2").on("click", function(){
 		//alert("tab 1");
-				$.ajax({
-                    type: "POST",
-                    url: "data/applicationLayer.php",
-                    dataType: "json",
-                    data: {'action':'CART', 'status':'B'},
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    success: function(jsonData) {
-                        var tableRows = "";
-                        $("#itemTable").find("td").remove();
-                        if (jsonData.message == 'OK')
-                        {
-                            //alert("datos");
-                            for(i = 0; i < jsonData.data.length; i ++)
-                            {
-                                tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].orderId + '</td><td>' + jsonData.secondData[i].sTitle + '</td><td>' + jsonData.thirdData[i].name + ' ' + jsonData.thirdData[i].last + '</td><td>' + jsonData.secondData[i].sEmail + '</td></tr>';
-                            } 
+		$.ajax({
+            type: "POST",
+            url: "data/applicationLayer.php",
+            dataType: "json",
+            data: {'action':'CART', 'status':'B'},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            success: function(jsonData) {
+                var tableRows = "";
+                $("#itemTable").find("td").remove();
+                if (jsonData.message == 'OK')
+                {
+                    //alert("datos");
+                    for(i = 0; i < jsonData.data.length; i ++)
+                    {
+                        tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].orderId + '</td><td>' + jsonData.secondData[i].sTitle + '</td><td>' + jsonData.thirdData[i].name + ' ' + jsonData.thirdData[i].last + '</td><td>' + jsonData.secondData[i].sEmail + '</td></tr>';
+                    } 
 
-                            $("#itemTable").append(tableRows);
-                        }
-                        else
-                        {
-                            //alert("nope");
-                             // $("#purchase").hide();
-                             // $("#cancelPurchase").hide();
-                             alert("Cart empty.");
-                        }
-                    },
-                    error: function(errorMsg){
-                        alert(errorMsg.statusText);
-                    }
-                });
+                    $("#itemTable").append(tableRows);
+                }
+                else
+                {
+                    //alert("nope");
+                     // $("#purchase").hide();
+                     // $("#cancelPurchase").hide();
+                     alert("Cart empty.");
+                }
+            },
+            error: function(errorMsg){
+                alert(errorMsg.statusText);
+            }
+        });
 	});
+
+
+
+
+
+
+
+
+
 	$("#tab3").on("click", function(){
-		alert("tab 3");
+        $.ajax({
+            type: "POST",
+            url: "data/applicationLayer.php",
+            dataType: "json",
+            data: {'action':'USER_POSTS'},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            success: function(jsonData) {
+                var tableRows = "";
+                $("#userPostsTable").find("td").remove();
+                    //alert("datos");
+                    for(i=0; i < jsonData.length; i++)
+                    {
+                        tableRows += '<tr id=' + i + '><td>';
+                        tableRows += jsonData[i].title + '</td><td>';
+                        tableRows += jsonData[i].description + '</td><td>';
+                        tableRows += jsonData[i].category + '</td><td>';
+                        tableRows += jsonData[i].quantity + '</td></tr>';
+                    } 
+
+                    $("#userPostsTable").append(tableRows);
+                
+            },
+            error: function(errorMsg){
+                alert(errorMsg.statusText);
+            }
+        });
+
 	});
+
+
+
+
+
+
+
+
+
 	$("#tab4").on("click", function(){
-				$.ajax({
-                    type: "POST",
-                    url: "data/applicationLayer.php",
-                    dataType: "json",
-                    data: {'action': 'MSG'},
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    success: function(jsonData) {
-                        var tableRows = "";
-                        $("#messageTable").find("td").remove();
-                        //alert(jsonData.message);
-                        if (jsonData.message == 'OK')
-                        {
-                            //alert("datos");
-                            for(i = 0; i < jsonData.data.length; i ++)
-                            {
-                                tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].name[i].name + '</td><td>' + jsonData.data[i].email + '</td><td><button id="' + jsonData.data[i].id + '" type="button">Message</button></td></tr>';
-                            }
-
-                            //alert(tableRows); 
-
-                            $("#messageTable").append(tableRows);
-                        }
-                    },
-                    error: function(errorMsg){
-                        alert(errorMsg.statusText);
+		$.ajax({
+            type: "POST",
+            url: "data/applicationLayer.php",
+            dataType: "json",
+            data: {'action': 'MSG'},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            success: function(jsonData) {
+                var tableRows = "";
+                $("#messageTable").find("td").remove();
+                //alert(jsonData.message);
+                if (jsonData.message == 'OK')
+                {
+                    //alert("datos");
+                    for(i = 0; i < jsonData.data.length; i ++)
+                    {
+                        tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].name[i].name + '</td><td>' + jsonData.data[i].email + '</td><td><button id="' + jsonData.data[i].id + '" type="button">Message</button></td></tr>';
                     }
-                });
+
+                    //alert(tableRows); 
+
+                    $("#messageTable").append(tableRows);
+                }
+            },
+            error: function(errorMsg){
+                alert(errorMsg.statusText);
+            }
+        });
 	});
 
 
 	$("#hire").on("click", function(){
-				$.ajax({
-                    type: "POST",
-                    url: "data/applicationLayer.php",
-                    dataType: "json",
-                    data: {'action': 'BUY'},
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    success: function(jsonData) {
-                        alert(jsonData);
-                        $("#tab2").trigger("click");
-                    },
-                    error: function(errorMsg){
-                        alert(errorMsg.statusText);
-                    }
-                });
+		$.ajax({
+            type: "POST",
+            url: "data/applicationLayer.php",
+            dataType: "json",
+            data: {'action': 'BUY'},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            success: function(jsonData) {
+                alert(jsonData);
+                $("#tab2").trigger("click");
+            },
+            error: function(errorMsg){
+                alert(errorMsg.statusText);
+            }
+        });
 	});
 
 
@@ -428,7 +501,7 @@
             type: 'POST',
             url: 'data/applicationLayer.php',
             dataType: 'json',
-            data: {'data':jsonObject, 'action':'UDATE_PROFILE'},
+            data: {'data':jsonObject, 'action':'UPDATE_PROFILE'},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             success: function(jsonData) {  
                 alert(jsonData); 
@@ -440,6 +513,31 @@
     });
 
 
+    $("#tab5").on("click", function(){
+        $.ajax({
+          type: 'POST',
+          url: 'data/applicationLayer.php',
+          dataType: 'json',
+          data: {'action':'GET_USER_DATA'},
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          success: function(jsonData) {
+            alert("User data received");
+            $("#userYear").val(jsonData[0].year);
+            $("#userCountry").val(jsonData[0].country);
+            $("#userCity").val(jsonData[0].city);
+            $("#userWebsite").val(jsonData[0].website);
+            $("#userPhone").val(jsonData[0].phone);
+            $("#userUniversity").val(jsonData[0].university);
+            $("#userInterests").val(jsonData[0].interests);
+            $("#userAdditional").val(jsonData[0].additional);
+
+            
+          },
+          error: function(errorMsg){
+            alert(errorMsg.statusText);
+          }
+        });
+    });
 
    
 

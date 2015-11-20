@@ -27,7 +27,7 @@
 							break;
 		case 'BUY':		buy();
 						break;
-		case 'UDATE_PROFILE': 	updateProfile();
+		case 'UPDATE_PROFILE': 	updateProfile();
 								break;
 		case 'ADD_TO_CART': addToCart();
 							break;
@@ -35,6 +35,10 @@
 						break;
 		case 'END_SES': endSession();
 						break;
+		case 'GET_USER_DATA': 	getUserData();
+								break;
+		case 'USER_POSTS': 	userPosts();
+							break;
 
 
 	}
@@ -415,6 +419,39 @@
 		{
 			die(json_encode(errors(417)));
 		}
+
+	}
+
+	function getUserData(){
+		session_start();
+
+		$result = getAllUserData($_SESSION['email']);
+
+		echo json_encode($result);
+
+	}
+
+
+	function userPosts(){
+
+		session_start();
+		if (isset($_SESSION['email']))
+		{
+			$result = getUserPosts($_SESSION['email']);
+
+			echo json_encode($result);
+			
+		}
+		else
+		{
+			die(json_encode(errors(417)));
+		}
+
+
+
+		
+
+
 
 	}
 
