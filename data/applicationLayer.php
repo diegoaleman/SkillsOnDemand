@@ -39,6 +39,10 @@
 								break;
 		case 'USER_POSTS': 	userPosts();
 							break;
+		case 'REPLY':	addReply();
+						break;
+		case 'MSG_ID':	showSpecificMessage();
+						break;
 
 
 	}
@@ -388,6 +392,8 @@
 			
 			$result = messages($_SESSION['email']);
 
+			//echo var_dump($result);
+
 			if ($result['message'] == 'OK') {
 				$message = "Messages loaded correctly!";
 
@@ -448,11 +454,44 @@
 		}
 
 
+	}
 
-		
+	function addReply()
+	{
+		session_start();
+		if (isset($_SESSION['email']))
+		{
 
+			$message = $_POST['reply'];
+			$toEmail = $_POST['sendTo'];
+			$result = addMessageReply($_SESSION['email'], $message, $sendTo);
 
+			echo json_encode($result);
+			
+		}
+		else
+		{
+			die(json_encode(errors(417)));
+		}
+	}
 
+	function showSpecificMessage()
+	{
+		session_start();
+		if (isset($_SESSION['email']))
+		{
+
+			$id = $_POST['msgID'];
+			
+			$result = showMessageById($_SESSION['email'], $id);
+
+			echo json_encode($result);
+			
+		}
+		else
+		{
+			die(json_encode(errors(417)));
+		}
 	}
 
 ?>

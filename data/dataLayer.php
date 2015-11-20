@@ -434,7 +434,7 @@
         if ($conn != null) {
             $sql = "INSERT INTO Cart (email, skill, quantity, status) VALUES ('$email', '$id', '1', 'P')";
             $response = validate($email, $id);
-            echo var_dump($response);
+            //echo var_dump($response);
 
             if ($response["message"] == "OK") {
                 if (mysqli_query($conn, $sql)) {
@@ -599,7 +599,7 @@
     		if ($result->num_rows > 0) {
     			while ($row = $result->fetch_assoc()) {
     				$name = getName($row['sentFrom']);
-    				array_push($data, array("name" => $name, "email" => $row['sentFrom'], "id" => $row['messageId']));
+    				array_push($data, array("name" => $name, "email" => $row['sentFrom'], "id" => $row['messageId'], "message" => $row['message'], "status" => $row['status']));
     			}
 
     			$response = array("message" => "OK", "data" => $data);
@@ -609,6 +609,7 @@
     		}
     		else {
     			$conn->close();
+    			$response = array("message" => "No messages");
 				return $response;
     		}
     	}
@@ -723,6 +724,63 @@
             return errors(409);
         }
 
+    }
+
+    function showMessageById($email, $id)
+    {
+    	$conn = connect();
+
+        if ($conn != null) {
+            $sql = "SELECT * FROM Message WHERE messageId = '$id'";
+
+            $result = $conn->query($sql);
+
+            $data = array();
+            $response = array();
+
+            if ($result->num_rows > 0) {
+            	while ($row = $result->fetch_assoc()) {
+    				$name = getName($row['sentFrom']);
+    				array_push($data, array("name" => $name, "email" => $row['sentFrom'], "message" => $row['message'], "status" => $row['status']));
+    			}
+    			$response = array("message" => "OK", "data" => $data);
+    			//echo var_dump($response);
+
+    			return $response;
+            }
+            else {
+    			$conn->close();
+				return $response;
+    		}
+        }
+        else 
+    	{
+    		$conn->close();
+    		return errors(409);
+    	}
+    }
+
+    function addMessageReply($from, $message, $sendTo)
+    {
+    	$conn = connect();
+
+        if ($conn != null) {
+        	$dateNow = date("Y/m/d");
+        	$sql = "INSERT INTO Message (sentTo, sentFrom, messageDate, message, status) VALUES ('$sendTo', '$from', '$dateNow', '$message', 'N')";
+
+        	if (mysqli_query($conn, $sql)) {
+        		$conn->close();
+                return array("status" => "COMPLETE");
+        	}else {
+                $conn->close();
+                return errors(409);
+            }
+        }
+        else 
+    	{
+    		$conn->close();
+    		return errors(409);
+    	}
     }
 
 ?>

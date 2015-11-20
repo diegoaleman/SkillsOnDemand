@@ -70,7 +70,7 @@
             
            
             <ul id='dropdown1' class='dropdown-content'>
-                <li><a href="searchSkills.html">Seach</a></li>
+                <li><a href="searchSkills.html">Search</a></li>
                 <li><a href="profile.html">Profile</a></li>
                 <li class="divider"></li>
                 <li><a id='logout' href="#!">Logout</a></li>
@@ -157,6 +157,43 @@
                     </table>	
                 </div>
         </div>
+
+        <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <form class="col s6 offset-s3">
+          
+              <div id="name" class="row">
+                 
+              </div>
+          
+              <div  id="email" class="row">
+
+              </div>
+
+              <div id="message" class="row">
+
+              </div>
+              
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="messageReply" class="materialize-textarea"></textarea>
+                    <label for="messageReply">Reply</label>
+                </div>
+              </div>
+
+
+          
+    
+        
+
+          </form>
+      </div>
+      <div class="modal-footer">
+        <a id='submitMessage' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Submit</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+      </div>
+    </div>
 	    
     </div>
      <div id="test5" class="col s12">
@@ -345,7 +382,7 @@
                 {
                     //alert("nope");
                      // $("#purchase").hide();
-                     // $("#cancelPurchase").hide();
+                      $("#hire").hide();
                      alert("Cart empty.");
                 }
             },
@@ -431,7 +468,7 @@
 
 
 
-
+	var globalEmail = "";
 
 
 
@@ -450,15 +487,18 @@
                 if (jsonData.message == 'OK')
                 {
                     //alert("datos");
+                    var j = 0;
                     for(i = 0; i < jsonData.data.length; i ++)
                     {
-                        tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].name[i].name + '</td><td>' + jsonData.data[i].email + '</td><td><button id="' + jsonData.data[i].id + '" type="button">Message</button></td></tr>';
-
+                    	
+                    	tableRows += '<tr id=' + i + '><td>' + jsonData.data[i].name[j].name + '</td><td>' + jsonData.data[i].email + '</td><td><a class="modal-trigger" href="#modal1" id="' + jsonData.data[i].id + '" type="button">View Message</a></td></tr>';
                     }
 
                     //alert(tableRows); 
 
                     $("#messageTable").append(tableRows);
+                } else {
+                	alert(jsonData.message);
                 }
             },
             error: function(errorMsg){
@@ -549,8 +589,92 @@
       
   	});
 
+    $(document).on('click', 'a.modal-trigger', function(){
+    	var abc = $(this).closest(".modal-trigger").attr("id");
+      	$(this).leanModal();
 
+    	$.ajax({
+	      type: "POST",
+	      url: "data/applicationLayer.php",
+	      dataType: "json",
+	      data: {'action': 'MSG_ID', 'msgID' : abc},
+	      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+	      success: function(jsonData) {
+	        var tableRows = "";
+	        //$("#messageTable").find("td").remove();
+	        //alert(jsonData.message);
+	        if (jsonData.message == 'OK')
+	        {
+	          //alert("datos");
+	          var j = 0;
+	          $("#email").find("label").remove();
+	          for(var i = 0; i < 1; i ++)
+	          {
+	            tableRows += "<label id='labelEmail'>" + jsonData.data[i].email + "</label>";
+	            globalEmail = jsonData.data[i].email;
+	          }
 
+	          //alert(tableRows); 
+
+	          $("#email").append(tableRows);
+	          var tableRows = "";
+	          var j = 0;
+	          $("#name").find("h4").remove();
+	          for(var i = 0; i < 1; i ++)
+	          {
+	             tableRows += "<h4>From: " + jsonData.data[i].name[j].name + "</h4>";
+	          }
+
+	          //alert(tableRows); 
+
+	          $("#name").append(tableRows);
+	          var tableRows = "";
+	          var j = 0;
+	          $("#message").find("h5").remove();
+	          for(var i = 0; i < 1; i ++)
+	          {
+	             tableRows += "<h5>" + jsonData.data[i].message + "</h5>";
+	          }
+
+	          //alert(tableRows); 
+
+	          $("#message").append(tableRows);
+	          
+	        }
+
+	      },
+	      error: function(errorMsg){
+	        alert(errorMsg.statusText);
+	      }
+	    });
+
+      	
+      
+  	});
+
+  	$("#submitMessage").on("click", function(){
+  		var jsonObject = {
+            'reply': $('#messageReply').val(),
+            'sendTo': globalEmail
+      	};
+      	//alert(globalEmail);
+      	$.ajax({
+	        type: 'POST',
+	        url: 'data/applicationLayer.php',
+	        dataType: 'json',
+	        data: {'data':jsonObject, 'action':'REPLY'},
+	        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+	        success: function(jsonData) {  
+	            alert(jsonData); 
+	        },
+	        error: function(errorMsg){
+	            alert(errorMsg.statusText);
+	        }
+      	});
+
+  	});
+
+    //$('.modal-trigger').leanModal();
 
 
 
